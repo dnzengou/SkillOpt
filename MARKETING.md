@@ -14,12 +14,14 @@
 | Dimension | Detail |
 |-----------|--------|
 | Core engine | PicoClaw — ultra-lightweight Go AI agent, <10MB RAM, runs on $10 RISC-V hardware |
-| Differentiator | **Agent economy** — a marketplace/ecosystem of bots, not a single agent |
+| Differentiator | **EvoMetaClaw** — bots that self-evolve via SkillOpt; + agent economy marketplace |
 | Platforms | Telegram, Discord, Slack, LINE, WeCom, DingTalk, QQ |
 | LLM backends | Multi-provider (OpenClaw-compatible, AWS Bedrock, Azure, local PicoLM) |
 | Key features | Cron scheduling, Brave Search, persistent memory, offline mode, SubTurn/Hooks/EventBus |
+| Evolution engine | SkillOpt (arXiv:2605.23904) — trains bot skill docs through rollout → reflect → gate |
 | Market wave | OpenClaw: 215k+ GitHub stars in 6 weeks (Jan 2026) — entire Claw ecosystem on fire |
 | Competitors | OpenClaw, MaxClaw, KimiClaw, ZeroClaw, EnterpriseClaw |
+| Moat | EvoMetaClaw: uncopiable without SkillOpt + trajectory data flywheel |
 | Stage | Early — HTML MVP on Vercel, private GitHub repo |
 
 ---
@@ -66,16 +68,16 @@
 ### Messaging Architecture
 
 **Hook (awareness):**
-> "PicoClaw runs on $10 hardware. Clow is where its bots live."
+> "The bots marketplace where bots get smarter. Powered by SkillOpt."
 
 **Pain-point message (consideration):**
-> "Stop paying $50/mo in cloud API fees for bots that could run on a $10 board in your drawer."
+> "Stop paying $50/mo in cloud API fees for static bots. Clow bots run on $10 hardware — and evolve through every conversation."
 
 **Value proposition (conversion):**
-> "Discover, deploy, and share AI bots for Telegram, Discord, Slack — no cloud lock-in, no vendor fees, runs anywhere PicoClaw runs."
+> "Discover, deploy, and evolve AI bots for Telegram, Discord, Slack — no cloud lock-in, no vendor fees. EvoMetaClaw makes your bots smarter with every interaction."
 
 **Social proof message (retention/referral):**
-> "Join 500+ developers building the open agent economy on Clow."
+> "Join 500+ developers building self-improving bots on the open agent economy."
 
 ### X/Twitter Content Calendar (@XTech73781 amplification)
 
@@ -224,29 +226,33 @@ utm_source=discord&utm_medium=community&utm_campaign=openclaw-discord&utm_conten
 
 **Tier 1 — Free (Community)**
 - Access to all community bots in the public registry
-- Deploy up to 3 bots
+- Deploy up to 3 bots (static — no evolution)
 - Standard LLM routing
 - Community support only
-- **Goal:** Maximum adoption; build network effects
+- **Goal:** Maximum adoption; build network effects + trajectory data
 
 **Tier 2 — Clow Pro · $9/month**
 - Unlimited bot deployments
+- **EvoMetaClaw:** 1 bot, weekly evolution cycle (the key differentiator)
 - Access to premium/verified bots marketplace
 - Priority LLM routing (lower latency)
-- Bot analytics dashboard (usage, uptime, errors)
+- Bot analytics dashboard (usage, uptime, errors, evolution metrics)
 - Email support (48h SLA)
+- **Upsell trigger:** Bot hits 100 conversations → "Ready to evolve — upgrade to Pro"
 - **Launch pricing:** $7/mo for first 100 subscribers (early bird)
 
 **Tier 3 — Clow Teams · $29/month**
 - Everything in Pro + multi-user workspace
+- **EvoMetaClaw:** 5 bots, daily evolution cycle
 - Private bot registry (share bots within team)
 - Webhook/CI integration for bot deployment
-- Slack/Teams notifications for bot health
+- Evolution leaderboard across team bots
 - 8h support SLA
 
 **Tier 4 — Clow Enterprise · $499/month**
 - Everything in Teams + SSO/SAML
-- Private on-prem registry option
+- **EvoMetaClaw:** unlimited bots, custom eval sets, on-prem SkillOpt
+- Private on-prem registry + evolution engine
 - Audit logs + compliance exports
 - Custom LLM endpoint routing
 - Dedicated support + onboarding
