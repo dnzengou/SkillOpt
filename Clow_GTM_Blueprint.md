@@ -1,5 +1,5 @@
 # Clow GTM Blueprint — Living Roadmap
-## v1.1 · June 2026 · BizFlow ARM Framework
+## v1.3 · June 2026 · BizFlow ARM + RRSS · devflow CI+Bl
 
 > **Product:** Clow — agent economy bots ecosystem powered by PicoClaw + AI LLM  
 > **Site:** https://clow-tau.vercel.app · **X:** @XTech73781  
@@ -297,14 +297,46 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 
 ---
 
-## FILE MANIFEST
+## COMMERCIAL HOOKS (implemented v1.3)
+
+| Hook | Where | Metric to watch |
+|------|-------|----------------|
+| Waitlist form (email capture) | `clow_landing.html` hero | Waitlist signups/day |
+| $7/mo Pro-for-life (first 100) | landing hero + Thread 1 | Waitlist→Pro conversion |
+| OG + Twitter card tags | landing `<head>` | Share link CTR |
+| Plausible analytics stub | landing `<head>` + inline JS | Traffic, event conversion |
+| Localstorage waitlist fallback | landing JS (offline queue) | Zero-loss signups |
+| 5 X threads (copy-paste ready) | `X_THREADS.md` | Publish cadence adherence |
+| Bot template + revenue-share YAML | `clow_bot_template.md` | Publisher onramp time |
+| Reply-quote templates | `X_THREADS.md` | Time-to-reply |
+
+---
+
+## FILE MANIFEST (v1.3)
 
 | File | Purpose | Last Updated |
 |------|---------|-------------|
 | `MARKETING.md` | Full ARM GTM strategy (8 phases) + EvoMetaClaw messaging | 2026-06-13 |
 | `CLAUDE.md` | Devflow project context | 2026-06-01 |
-| `Clow_GTM_Blueprint.md` | This file — living roadmap v1.2 | 2026-06-13 |
-| `EvoMetaClaw.md` | Self-evolving bots concept: SkillOpt × Clow architecture + launch copy | 2026-06-13 |
+| `Clow_GTM_Blueprint.md` | This file — living roadmap v1.3 | 2026-06-14 |
+| `EvoMetaClaw.md` | Self-evolving bots architecture + 5 commercial hooks + launch copy | 2026-06-14 |
+| `clow_landing.html` | Production-ready standalone landing page (waitlist + OG + Plausible) | 2026-06-14 |
+| `X_THREADS.md` | 5 copy-paste X threads + reply-quote templates for @XTech73781 | 2026-06-14 |
+| `clow_bot_template.md` | Starter skill template — supply-side onramp | 2026-06-14 |
+
+---
+
+## DEPLOY PATHS
+
+| Target | Command | Notes |
+|--------|---------|-------|
+| Vercel (`clow-tau.vercel.app`) | Copy `clow_landing.html` → `index.html`; `vercel --prod` | Preferred: OG images resolve to same domain |
+| Netlify (fallback) | Netlify Drop the HTML file | Zero-config |
+| GitHub Pages | Push to `gh-pages` branch | Free; DNS: point `clow.dev` if acquired |
+| SkillOpt docs (`microsoft.github.io/SkillOpt`) | `mkdocs gh-deploy` | Not affected by this branch |
+
+**Waitlist backend (missing dep — production requirement):**
+- `POST /api/waitlist` endpoint on Vercel — Edge Function (~20 lines) writing to Airtable/Supabase/ConvertKit. Falls back to localStorage queue if endpoint returns non-2xx (already handled in landing JS).
 
 ---
 
@@ -314,10 +346,11 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 |---------|------|---------|
 | 1.0 | 2026-05-31 | ARM GTM strategy created (MARKETING.md); bizflow/devflow skills installed |
 | 1.1 | 2026-06-01 | CLAUDE.md created; Blueprint initialized; 30-day sprint + X thread templates added |
-| 1.2 | 2026-06-13 | EvoMetaClaw concept built (EvoMetaClaw.md); MARKETING.md evolved with EvoMetaClaw positioning + updated pricing tiers; Blueprint updated with RRSS resilience report, EvoMetaClaw roadmap items, evolved metrics dashboard; full B+CI+E+RRSS+ARM pipeline run |
+| 1.2 | 2026-06-13 | EvoMetaClaw concept built; MARKETING.md evolved with EvoMetaClaw positioning; RRSS resilience report added |
+| 1.3 | 2026-06-14 | **Production hardening pass:** clow_landing.html (waitlist + OG tags + Plausible + offline fallback); X_THREADS.md (5 threads + reply-quotes extracted from Blueprint); clow_bot_template.md (supply-side onramp); EvoMetaClaw evolved with 5 commercial hooks (100-conv upsell, evolution leaderboard, before/after diff, Certified badge, $7/mo lock-in); deploy paths documented |
 
 ---
 
-*Clow GTM Blueprint v1.2 · BizFlow ARM + RRSS · devflow CI+Bl*  
+*Clow GTM Blueprint v1.3 · BizFlow ARM+RRSS · devflow Kf CI+E+Im+Bl*  
 *Deploy: https://clow-tau.vercel.app · Docs: https://microsoft.github.io/SkillOpt*  
 *EvoMetaClaw: SkillOpt (arXiv:2605.23904) × Clow bots ecosystem*

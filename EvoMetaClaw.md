@@ -210,6 +210,39 @@ Track these per bot in the Clow dashboard:
 
 ---
 
+## COMMERCIAL HOOKS (low-hanging fruit)
+
+### 1. The "100 conversations" upsell trigger
+Bot free-tier users hit 100 conversations → in-app modal:
+> *"Your bot has enough data to start learning. Enable EvoMetaClaw (Pro) to let it evolve — first month $7."*
+
+Conversion physics: at 100 conversations the user has invested; sunk-cost bias + demonstrated value = highest-converting upgrade moment in the funnel.
+
+### 2. The evolution leaderboard (public)
+Weekly public leaderboard: **Top 10 evolving bots by skill improvement**. Creates:
+- Competition among bot publishers (supply-side flywheel)
+- Social proof for potential Pro subscribers
+- Free content for @XTech73781 X thread every Sunday
+
+### 3. The "before/after" evolution diff
+Every evolution cycle produces a git-style diff of the skill document. Users can:
+- Preview the evolution before accepting (trust)
+- Share the diff on X ("look what my bot learned this week")
+- Roll back to any version (safety)
+
+This is the killer share loop. Real diffs = real proof = viral.
+
+### 4. Certified Evolving Bots badge (marketplace)
+Bots with 4+ successful evolution cycles get a **✨ Certified Evolving** badge in the registry. Users filter for it. Publishers earn 2× the marketplace conversion vs static bots.
+
+### 5. Waitlist → early-bird lock-in
+First 100 waitlist signups → $7/mo Pro FOR LIFE (grandfathered). Creates:
+- Urgency (scarcity)
+- Higher waitlist conversion (skin in the game once claimed)
+- Reference customers for month-3 case studies
+
+---
+
 ## LAUNCH MESSAGING
 
 ### X Thread — EvoMetaClaw Reveal (@XTech73781)

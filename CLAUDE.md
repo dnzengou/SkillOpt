@@ -33,7 +33,11 @@ SkillOpt/
 ├── index.html         # standalone project landing page (Microsoft/SkillOpt)
 ├── mkdocs.yml         # MkDocs config → deploys to GitHub Pages
 ├── MARKETING.md       # Clow bots ARM GTM strategy (branch: clow-bots-marketing-gtm)
-└── Clow_GTM_Blueprint.md  # living roadmap for Clow GTM initiative
+├── Clow_GTM_Blueprint.md  # living roadmap for Clow GTM initiative
+├── EvoMetaClaw.md     # SkillOpt × Clow moat: self-evolving bots
+├── clow_landing.html  # production-ready standalone landing page (deploy to Vercel)
+├── X_THREADS.md       # copy-paste X threads for @XTech73781
+└── clow_bot_template.md   # starter skill template for bot publishers
 ```
 
 ## Active Branch Context
