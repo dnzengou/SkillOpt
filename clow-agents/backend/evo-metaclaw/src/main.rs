@@ -182,19 +182,26 @@ impl EvoEngine {
         let bot: Bot = sqlx::query_as("SELECT * FROM evo_bots WHERE id = ?")
             .bind(bot_id).fetch_one(&self.pool).await?;
 
-        // Real impl would POST to SkillOpt training service:
-        //   POST http://skillopt-worker/train {bot_id, skill_version, trajectories}
-        // For now: simulate gate outcome from current fitness (>0.5 = likely to improve)
-        let simulated_delta = (bot.fitness - 0.5) * 0.2; // [-0.1, 0.1]
-        let gate_passed = simulated_delta >= GATE_MIN_IMPROVEMENT;
-        let next_version = bump_version(&bot.skill_version);
+        // Try the real SkillOpt worker if configured; fall back to a
+        // fitness-driven simulation so a missing worker doesn't block the loop.
+        let (gate_passed, gate_delta, next_version) =
+            match call_skillopt_worker(bot_id, &bot.skill_version).await {
+                Ok(Some(r)) => (r.gate_passed, r.gate_score_delta, r.next_version),
+                Ok(None) | Err(_) => {
+                    let d = (bot.fitness - 0.5) * 0.2;
+                    let passed = d >= GATE_MIN_IMPROVEMENT;
+                    let v = if passed { bump_version(&bot.skill_version) } else { bot.skill_version.clone() };
+                    (passed, d, v)
+                }
+            };
 
         let ev = EvolutionEvent {
             id: format!("evo-{}", Uuid::new_v4()),
             bot_id: bot_id.into(),
             from_version: bot.skill_version.clone(),
-            to_version: if gate_passed { next_version.clone() } else { bot.skill_version.clone() },
-            gate_passed, gate_score_delta: simulated_delta,
+            to_version: next_version.clone(),
+            gate_passed,
+            gate_score_delta: gate_delta,
             trigger: trigger.into(),
             ts: Utc::now(),
         };
@@ -250,6 +257,49 @@ fn bump_version(v: &str) -> String {
     if parts.len() != 3 { return "0.1.0".into(); }
     let patch: u32 = parts[2].parse().unwrap_or(0);
     format!("{}.{}.{}", parts[0], parts[1], patch + 1)
+}
+
+// ===== SkillOpt worker bridge =====
+//
+// If SKILLOPT_WORKER_URL is set, evo-metaclaw asks the Python worker
+// (scripts/skillopt_worker.py) to run a real training step. On any
+// failure (worker down, timeout, non-2xx, missing env) we return
+// Ok(None) so the caller falls back to the fitness-simulation gate —
+// evolution never blocks the loop.
+#[derive(Debug, Deserialize)]
+struct WorkerResult {
+    #[serde(default)] ok: bool,
+    #[serde(default)] gate_passed: bool,
+    #[serde(default)] gate_score_delta: f32,
+    #[serde(default)] next_version: String,
+}
+
+async fn call_skillopt_worker(bot_id: &str, skill_version: &str) -> Result<Option<WorkerResult>> {
+    let url = match std::env::var("SKILLOPT_WORKER_URL") {
+        Ok(u) if !u.is_empty() => u,
+        _ => return Ok(None),
+    };
+    let token = std::env::var("SKILLOPT_WORKER_TOKEN").unwrap_or_default();
+
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(3600))  // training runs can be long
+        .build()?;
+    let mut req = client
+        .post(format!("{}/train", url.trim_end_matches('/')))
+        .json(&json!({
+            "bot_id": bot_id,
+            "skill_version": skill_version,
+            "gate_min_improvement": GATE_MIN_IMPROVEMENT,
+        }));
+    if !token.is_empty() {
+        req = req.header("authorization", format!("Bearer {}", token));
+    }
+
+    let res = req.send().await?;
+    if !res.status().is_success() { return Ok(None); }
+    let parsed: WorkerResult = res.json().await?;
+    if !parsed.ok || parsed.next_version.is_empty() { return Ok(None); }
+    Ok(Some(parsed))
 }
 
 async fn migrate_evo(pool: &SqlitePool) -> Result<()> {

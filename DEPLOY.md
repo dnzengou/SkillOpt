@@ -67,4 +67,54 @@ vercel --prod
 
 ---
 
-*Deploy checklist v1.0 · Ship in <30 min · KafCa mode*
+## 8. Backend layer (optional but recommended — Fly.io)
+
+Deploy `clow-agents/backend/*` to Fly.io for real GTM automation. All optional — landing works without it (waitlist writes straight to Airtable). Fly `machines auto_stop` keeps idle cost at ~$0.
+
+```bash
+cd clow-agents/backend
+fly deploy -c gtm-engine/fly.toml     -a gtm-engine
+fly deploy -c security-agent/fly.toml -a security-agent
+fly deploy -c evo-metaclaw/fly.toml   -a evo-metaclaw
+
+# Verify all three at once
+./scripts/smoke.sh   # locally
+GTM=https://gtm-engine.fly.dev SEC=https://security-agent.fly.dev EVO=https://evo-metaclaw.fly.dev ./scripts/smoke.sh
+```
+
+**Env vars per service** (Fly secrets): copy from `.env.example`; at minimum set `API_TOKEN` (bearer) + `SLACK_WEBHOOK`.
+
+**Wire waitlist → gtm-engine** (Vercel env, optional):
+```
+GTM_ENGINE_URL=https://gtm-engine.fly.dev
+GTM_ENGINE_TOKEN=<same API_TOKEN as gtm-engine>
+```
+Failure is silent — Airtable still gets the row.
+
+**Wire evo-metaclaw → SkillOpt worker** (Fly secrets for evo-metaclaw, optional):
+```
+SKILLOPT_WORKER_URL=http://<worker-fly-6pn-host>:9000
+SKILLOPT_WORKER_TOKEN=<match WORKER_TOKEN on the Python worker>
+```
+Falls back to fitness-driven simulation if unset — evolution loop never blocks.
+
+---
+
+## 9. Ops dashboard
+
+`dashboard.html` — single file, no build. Drop on any static host (Vercel, Netlify, GitHub Pages, or a `file://` open). Enter service URLs + bearer token once (stored in localStorage). Auto-refreshes every 30s. Shows: MRR forecast, top leads, deal pipeline by stage, security compliance, evolution leaderboard.
+
+```bash
+# Local
+open dashboard.html   # macOS   |  xdg-open dashboard.html   # Linux
+
+# Deploy alongside landing (Vercel serves both):
+vercel --prod
+# → https://clow-tau.vercel.app/dashboard.html
+```
+
+⚠️ **Never expose `dashboard.html` publicly without adding auth in front** — it holds your bearer token in localStorage. Vercel Password Protection, Cloudflare Access, or a `noindex,nofollow` meta + obscure path are the standard mitigations. `noindex` is already set in the file.
+
+---
+
+*Deploy checklist v1.1 · Ship in <30 min · KafCa mode · Backend + dashboard added*

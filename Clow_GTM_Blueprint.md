@@ -1,5 +1,5 @@
 # Clow GTM Blueprint — Living Roadmap
-## v1.5 · June 2026 · BizFlow ARM + RRSS · devflow Kf CI+Bl · Backend live
+## v1.6 · June 2026 · BizFlow ARM + RRSS · devflow Kf CI+Bl · Backend + Dashboard + SkillOpt bridge
 
 > **Product:** Clow — agent economy bots ecosystem powered by PicoClaw + AI LLM  
 > **Site:** https://clow-tau.vercel.app · **X:** @XTech73781  
@@ -353,6 +353,7 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 | 1.3 | 2026-06-14 | **Production hardening pass:** clow_landing.html (waitlist + OG tags + Plausible + offline fallback); X_THREADS.md (5 threads + reply-quotes extracted from Blueprint); clow_bot_template.md (supply-side onramp); EvoMetaClaw evolved with 5 commercial hooks (100-conv upsell, evolution leaderboard, before/after diff, Certified badge, $7/mo lock-in); deploy paths documented |
 | 1.4 | 2026-06-14 | **Ship-ready pass:** api/waitlist.js Edge Function (Airtable + throttle + validation); api/og.js dynamic OG image; vercel.json routing + full CSP/HSTS security headers; DEPLOY.md 30-min go-live checklist; landing wired to /api/og. All 2 flagged deps closed — can ship to prod today. |
 | 1.5 | 2026-06-14 | **Backend layer live:** absorbed Kimi GTM+Security pack into `clow-agents/` (Rust/Axum/SQLite/Fly.io). Built missing `gtm-engine/src/main.rs` (Clow-tailored: ICP scoring by domain+source+plan+persona; deal pipeline Free→Pro→Teams→Enterprise; MRR forecast; dormant-lead nurture loop; hot-lead Slack alerts). Built missing `evo-metaclaw` crate (fitness EMA per bot, cadence-triggered evolution, gate simulation, public leaderboard, KafCa bus events). Security-agent from pack kept as-is → powers **Certified Secure Bot** marketplace badge. Waitlist Edge Function now forwards to gtm-engine for ICP scoring (best-effort, non-blocking). |
+| 1.6 | 2026-07-14 | **Ops layer + real evolution bridge:** (1) Fixed 2 Rust compile blockers (sqlx `macros` feature + `governor` dep in security-agent). (2) `dashboard.html` — single-file ops dashboard hitting all 3 services; MRR/ARR KPIs, top leads with persona pills, deal pipeline bar chart, evolution leaderboard, security findings; auto-refresh 30s; localStorage config; `noindex,nofollow`. (3) `scripts/skillopt_worker.py` — stdlib-only HTTP worker bridging evo-metaclaw ↔ `scripts/train.py`; parses `history.json` for real gate delta; auth via `WORKER_TOKEN`. (4) evo-metaclaw `trigger_evolution` now calls the worker via `SKILLOPT_WORKER_URL`; falls back to fitness simulation if unset — loop never blocks. (5) `scripts/smoke.sh` — one-command health probe (public + authed) for all 4 services with pass/fail summary. (6) DEPLOY.md v1.1 with Fly deploy, dashboard, worker wiring, security caveat. |
 
 ---
 
