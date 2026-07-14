@@ -1,5 +1,5 @@
 # Clow GTM Blueprint — Living Roadmap
-## v1.3 · June 2026 · BizFlow ARM + RRSS · devflow CI+Bl
+## v1.5 · June 2026 · BizFlow ARM + RRSS · devflow Kf CI+Bl · Backend live
 
 > **Product:** Clow — agent economy bots ecosystem powered by PicoClaw + AI LLM  
 > **Site:** https://clow-tau.vercel.app · **X:** @XTech73781  
@@ -335,8 +335,11 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 | GitHub Pages | Push to `gh-pages` branch | Free; DNS: point `clow.dev` if acquired |
 | SkillOpt docs (`microsoft.github.io/SkillOpt`) | `mkdocs gh-deploy` | Not affected by this branch |
 
-**Waitlist backend (missing dep — production requirement):**
-- `POST /api/waitlist` endpoint on Vercel — Edge Function (~20 lines) writing to Airtable/Supabase/ConvertKit. Falls back to localStorage queue if endpoint returns non-2xx (already handled in landing JS).
+**Deploy artifacts (v1.4 — all shipped):**
+- `api/waitlist.js` — Vercel Edge Function; Airtable-backed; validates email; per-IP throttle (3s); CORS + typed errors; server never leaks storage-error details to client (landing already handles gracefully)
+- `api/og.js` — Vercel Edge Function; `@vercel/og`; dynamic 1200×630 PNG with title/subtitle query params; 1h edge cache
+- `vercel.json` — routes `/` → landing; security headers (CSP, HSTS, X-Content-Type-Options, Permissions-Policy, Referrer-Policy)
+- `DEPLOY.md` — 30-min go-live checklist with env-var table, Airtable schema, verify steps, kill switches
 
 ---
 
@@ -348,6 +351,8 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 | 1.1 | 2026-06-01 | CLAUDE.md created; Blueprint initialized; 30-day sprint + X thread templates added |
 | 1.2 | 2026-06-13 | EvoMetaClaw concept built; MARKETING.md evolved with EvoMetaClaw positioning; RRSS resilience report added |
 | 1.3 | 2026-06-14 | **Production hardening pass:** clow_landing.html (waitlist + OG tags + Plausible + offline fallback); X_THREADS.md (5 threads + reply-quotes extracted from Blueprint); clow_bot_template.md (supply-side onramp); EvoMetaClaw evolved with 5 commercial hooks (100-conv upsell, evolution leaderboard, before/after diff, Certified badge, $7/mo lock-in); deploy paths documented |
+| 1.4 | 2026-06-14 | **Ship-ready pass:** api/waitlist.js Edge Function (Airtable + throttle + validation); api/og.js dynamic OG image; vercel.json routing + full CSP/HSTS security headers; DEPLOY.md 30-min go-live checklist; landing wired to /api/og. All 2 flagged deps closed — can ship to prod today. |
+| 1.5 | 2026-06-14 | **Backend layer live:** absorbed Kimi GTM+Security pack into `clow-agents/` (Rust/Axum/SQLite/Fly.io). Built missing `gtm-engine/src/main.rs` (Clow-tailored: ICP scoring by domain+source+plan+persona; deal pipeline Free→Pro→Teams→Enterprise; MRR forecast; dormant-lead nurture loop; hot-lead Slack alerts). Built missing `evo-metaclaw` crate (fitness EMA per bot, cadence-triggered evolution, gate simulation, public leaderboard, KafCa bus events). Security-agent from pack kept as-is → powers **Certified Secure Bot** marketplace badge. Waitlist Edge Function now forwards to gtm-engine for ICP scoring (best-effort, non-blocking). |
 
 ---
 

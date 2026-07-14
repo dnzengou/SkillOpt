@@ -37,7 +37,16 @@ SkillOpt/
 ├── EvoMetaClaw.md     # SkillOpt × Clow moat: self-evolving bots
 ├── clow_landing.html  # production-ready standalone landing page (deploy to Vercel)
 ├── X_THREADS.md       # copy-paste X threads for @XTech73781
-└── clow_bot_template.md   # starter skill template for bot publishers
+├── clow_bot_template.md   # starter skill template for bot publishers
+├── api/               # Vercel Edge Functions (waitlist, og image)
+├── vercel.json        # routing + security headers
+├── DEPLOY.md          # 30-min go-live checklist
+└── clow-agents/       # Rust backend: gtm-engine + security-agent + evo-metaclaw
+    └── backend/
+        ├── shared/          # KafCa bus, auth, db, models, notify
+        ├── gtm-engine/      # ICP scoring, deal pipeline, MRR forecast
+        ├── security-agent/  # scan → Certified Secure badge
+        └── evo-metaclaw/    # trajectory ingest, fitness, evolution gate, leaderboard
 ```
 
 ## Active Branch Context

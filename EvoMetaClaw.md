@@ -210,6 +210,27 @@ Track these per bot in the Clow dashboard:
 
 ---
 
+## IMPLEMENTATION (v0.2 shipped)
+
+The concept is now code. See `clow-agents/backend/evo-metaclaw/` (Rust/Axum) and `clow-agents/README.md`.
+
+**What ships:**
+- `POST /bots` — register a bot for evolution
+- `POST /signals` — ingest trajectory (bot_id, signal_type, fitness_delta)
+- `POST /bots/{id}/evolve` — trigger evolution manually
+- `GET /leaderboard` — public endpoint powering the marketplace widget
+- Cadence-triggered evolution (≥100 conversations, ≥168h since last)
+- EMA fitness model (α=0.1) over trajectory `fitness_delta` values
+- Gate simulation (5% min improvement); real integration = swap `trigger_evolution`'s simulation block for `POST http://skillopt-worker/train`
+
+**Sister services in `clow-agents/`:**
+- `gtm-engine` — ingests waitlist signups from `api/waitlist.js`; scores by ICP (email domain + source + plan + persona); tracks Free→Pro→Teams→Enterprise pipeline; emits trajectory signals evo-metaclaw consumes
+- `security-agent` — scans marketplace bots; 0-critical unlocks the ✨ Certified Secure Bot badge
+
+All three share the `KafCa` broadcast bus (`shared/src/bus.rs`) — same name as devflow's KafCa token-efficiency mode. The pun is intentional; the bus really is Kafka-lite in-process.
+
+---
+
 ## COMMERCIAL HOOKS (low-hanging fruit)
 
 ### 1. The "100 conversations" upsell trigger
