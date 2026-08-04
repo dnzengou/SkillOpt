@@ -36,8 +36,15 @@ SkillOpt/
 ├── Clow_GTM_Blueprint.md  # living roadmap for Clow GTM initiative
 ├── EvoMetaClaw.md     # SkillOpt × Clow moat: self-evolving bots
 ├── clow_landing.html  # production-ready standalone landing page (deploy to Vercel)
+├── use_cases.html     # 3-bot showcase w/ live evolution feed (routes: /use-cases)
 ├── X_THREADS.md       # copy-paste X threads for @XTech73781
 ├── clow_bot_template.md   # starter skill template for bot publishers
+├── EvoStack.md        # name-space cheat sheet: KafCa/KafCade/EvoSkillOpt/EvoMetaClaw/EvoForge/RRSS
+├── bots/              # 3 ready-to-fork sample bots (marketplace at launch)
+│   ├── telegram-summarizer/  # free tier
+│   ├── discord-moderator/    # $3/mo
+│   └── slack-standup/        # $5/mo
+├── .github/workflows/ci.yml  # cargo check + clippy + node --check + py compile
 ├── api/               # Vercel Edge Functions (waitlist, og image)
 ├── vercel.json        # routing + security headers
 ├── DEPLOY.md          # 30-min go-live checklist
