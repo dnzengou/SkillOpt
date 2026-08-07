@@ -53,7 +53,8 @@ SkillOpt/
 │   ├── train.py           # SkillOpt training entrypoint (existing)
 │   ├── eval_only.py       # SkillOpt evaluation entrypoint (existing)
 │   ├── skillopt_worker.py # HTTP bridge: evo-metaclaw ↔ train.py (stdlib only)
-│   └── smoke.sh           # one-command health probe for backend + worker
+│   ├── smoke.sh           # one-command health probe for backend + worker
+│   └── deploy_vercel.sh   # one-command Vercel deploy (assembles + ships)
 └── clow-agents/       # Rust backend: gtm-engine + security-agent + evo-metaclaw
     └── backend/
         ├── shared/          # KafCa bus, auth, db, models, notify

@@ -2,6 +2,25 @@
 
 Ship the waitlist to production. Assumes you already own the `clow-tau.vercel.app` Vercel project.
 
+## TL;DR — one command
+
+```bash
+# One-time (per machine)
+npm i -g vercel && vercel login && vercel link
+
+# Every deploy
+./scripts/deploy_vercel.sh            # → production
+PREVIEW=1 ./scripts/deploy_vercel.sh  # → preview URL
+
+# See scripts/deploy_vercel.sh — assembles only landing/dashboard/api into
+# .vercel-deploy/, then runs `vercel --prod`. Skips SkillOpt Python, Rust
+# backend, sample bots.
+```
+
+Then read the sections below only if you're setting up for the first time or debugging.
+
+---
+
 ---
 
 ## 1. Files to publish (all in this repo)
