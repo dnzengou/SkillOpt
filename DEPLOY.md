@@ -34,14 +34,31 @@ vercel.json            # routing + security headers
 
 ## 2. Env vars (Vercel dashboard → Settings → Environment Variables)
 
-| Key | Value | Where to get it |
-|-----|-------|-----------------|
-| `AIRTABLE_API_KEY` | `pat_...` | airtable.com → account → personal access token (scope: `data.records:write`) |
-| `AIRTABLE_BASE_ID` | `app...` | Airtable base URL: `airtable.com/appXXX/...` |
-| `AIRTABLE_TABLE` | `Waitlist` | Table name (default: Waitlist) |
+The waitlist tries backends in this order and returns 200 on first success. **Both are OPTIONAL** — if neither is set, signups still return 200 (client-side Plausible + landing localStorage catch them, and you get real signal without any storage config).
 
-**Airtable schema — one table, six fields:**
-`Email` (text, unique) · `Source` (text) · `Plan` (text) · `UA` (text) · `IP` (text) · `Timestamp` (text)
+### Option A — gtm-engine on Fly.io (recommended)
+Full ICP scoring, deal pipeline, hot-lead Slack, KafCa events. Requires deploying the Rust backend first (§ 8).
+
+| Key | Value |
+|-----|-------|
+| `GTM_ENGINE_URL` | `https://gtm-engine.fly.dev` (or your Fly hostname) |
+| `GTM_ENGINE_TOKEN` | matches `API_TOKEN` you set on gtm-engine |
+
+### Option B — GitHub Issues (zero-vendor fallback)
+Each waitlist signup becomes one labeled issue in a repo you own. Free forever, auditable, exportable via GitHub's own tools. No third-party service.
+
+| Key | Value |
+|-----|-------|
+| `GH_TOKEN` | Fine-grained PAT with `issues:write` scope on ONE repo. Create at [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new) |
+| `GH_REPO` | `your-github/clow-waitlist` (recommended: dedicated private repo) |
+
+Setup for Option B (60 seconds):
+1. Create a private repo `clow-waitlist` (or reuse an existing one)
+2. github.com/settings/personal-access-tokens/new → **Fine-grained**, only that repo, **Contents: read, Issues: read/write**
+3. Paste the `github_pat_...` into `GH_TOKEN`
+4. Deploy. Every signup becomes an issue with labels `waitlist`, `source:...`, `plan:...`
+
+You can filter/export via GitHub's built-in issue search: `is:issue label:waitlist label:plan:pro`.
 
 ## 3. Add `@vercel/og` dep (only if you deploy `api/og.js`)
 
@@ -72,9 +89,13 @@ vercel --prod
 
 | Symptom | Fix |
 |---------|-----|
-| Airtable at 429 | Wait 60s; Airtable free tier = 5 req/s. Or upgrade Airtable. |
+| Waitlist returns 200 but nothing lands in GH/gtm-engine | Env vars not set — check Vercel dashboard. `/api/waitlist` returns 200 by design even with no store (client-side Plausible still records the signal). |
+| GitHub returns 401 | PAT expired or scope mismatch. Regenerate fine-grained token with `Issues: read/write` on the exact repo in `GH_REPO`. |
+| GitHub returns 404 | `GH_REPO` typo — must be `owner/repo` exact form, case-sensitive. |
+| GitHub returns 403 (rate limit) | 5000 req/hr on PATs; irrelevant unless you're testing in a loop. |
+| gtm-engine returns 502 | Service asleep on Fly (auto_stop_machines). First request wakes it in ~2s; next requests are fast. |
 | `/api/og` 500 | Missing `@vercel/og` dep. Run `npm i @vercel/og` and redeploy. |
-| Waitlist form spins forever | `/api/waitlist` returned non-2xx — offline localStorage queue already caught it; check `console.error` in Vercel logs. |
+| Waitlist form spins forever | Landing's offline localStorage queue already caught the email. Check `console.error` in Vercel logs. |
 | X card renders text-only | OG image not resolving. Curl `/api/og` — expect 200 image/png. |
 
 ## 7. Post-deploy (Day 1)
