@@ -366,12 +366,15 @@ impl GtmEngine {
         Ok(())
     }
 
-    // Daily nurture tick — flags dormant leads for re-engagement
-    async fn nurture_loop(self: Arc<RwLock<Self>>) {
+    // Daily nurture tick — flags dormant leads for re-engagement.
+    // Free function (not method) because `self: Arc<RwLock<Self>>` is not a
+    // valid Rust receiver — only `Arc<Self>` is. Call site: main() does
+    // `tokio::spawn(async move { GtmEngine::nurture_loop(state).await })`.
+    async fn nurture_loop(state: Arc<RwLock<Self>>) {
         let mut tick = interval(TokioDuration::from_secs(86_400));
         loop {
             tick.tick().await;
-            let g = self.read().await;
+            let g = state.read().await;
             let cutoff = (Utc::now() - Duration::days(14)).to_rfc3339();
             match sqlx::query_scalar::<_, i64>(
                 "SELECT COUNT(*) FROM accounts WHERE status = 'new' AND ts < ?"

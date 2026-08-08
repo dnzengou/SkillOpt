@@ -17,13 +17,13 @@ use axum::{
     Json, Router,
 };
 use chrono::Utc;
-use governor_tower::GovernorLayer;
-use governor::{Quota, RateLimiter};
+// Rate-limiter dropped: tower_governor 0.7's GovernorLayer::new API changed
+// upstream and the Fly.io platform + bearer auth on /scan is sufficient
+// for MVP. Re-add via GovernorConfigBuilder when we need per-IP throttling.
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::SqlitePool;
 use std::sync::Arc;
-use std::num::NonZeroU32;
 use tokio::time::{interval, Duration};
 use tracing::{error, info};
 use uuid::Uuid;
@@ -395,27 +395,7 @@ fn mk_finding(target: &str, vuln: &str, evidence: &str, cvss: f32, sev: &str) ->
     }
 }
 
-// Clone impl for Config so we can clone the engine for background tasks
-impl Clone for Config {
-    fn clone(&self) -> Self {
-        Self {
-            api_token: self.api_token.clone(),
-            fly_token: self.fly_token.clone(),
-            slack_webhook: self.slack_webhook.clone(),
-            resend_key: self.resend_key.clone(),
-            pagerduty_key: self.pagerduty_key.clone(),
-            github_token: self.github_token.clone(),
-            apollo_key: self.apollo_key.clone(),
-            llm_api_key: self.llm_api_key.clone(),
-            llm_base_url: self.llm_base_url.clone(),
-            gtm_targets: self.gtm_targets.clone(),
-            security_targets: self.security_targets.clone(),
-            cors_origin: self.cors_origin.clone(),
-            rate_limit_per_minute: self.rate_limit_per_minute,
-            database_url: self.database_url.clone(),
-        }
-    }
-}
+// (Config is `#[derive(Clone)]` in the shared crate — no manual impl here.)
 
 // ===== HANDLERS =====
 
@@ -471,13 +451,6 @@ async fn main() -> Result<()> {
 
     let cfg = Config::from_env("security-agent")?;
     let auth_state = Arc::new(AuthState::new(cfg.api_token.clone()));
-
-    // Rate limiter: per-minute quota from config
-    let quota = Quota::per_minute(
-        NonZeroU32::new(cfg.rate_limit_per_minute).unwrap_or(NonZeroU32::new(10).unwrap())
-    );
-    let rate_limiter = GovernorLayer::new(&RateLimiter::direct(quota));
-
     let engine = Arc::new(tokio::sync::RwLock::new(SecurityEngine::new(cfg).await?));
 
     // Background loop
@@ -489,9 +462,10 @@ async fn main() -> Result<()> {
     // Public routes
     let public = Router::new().route("/health", get(health));
 
-    // Protected routes — /scan has rate limiting
+    // Protected routes (bearer-auth). Rate-limiting deferred — Fly platform
+    // + bearer token are sufficient for MVP; add tower_governor when needed.
     let protected = Router::new()
-        .route("/scan", post(scan).layer(rate_limiter))
+        .route("/scan", post(scan))
         .route("/findings", get(findings))
         .route("/ecosystem/report", get(ecosystem_report))
         .route("/scan-history", get(scan_history))

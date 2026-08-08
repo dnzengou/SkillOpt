@@ -6,7 +6,7 @@ use axum::{
 };
 use tower_http::cors::{Any, CorsLayer};
 use std::time::Duration;
-use tracing::{info, Span};
+use tracing::info;
 
 // CORS layer for dashboard integration
 pub fn cors_layer(origin: &str) -> CorsLayer {

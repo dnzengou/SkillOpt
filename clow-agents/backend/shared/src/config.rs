@@ -1,5 +1,6 @@
 use anyhow::Result;
 
+#[derive(Clone)]
 pub struct Config {
     // Auth
     pub api_token: String,

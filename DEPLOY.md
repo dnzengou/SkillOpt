@@ -4,20 +4,35 @@ Ship the waitlist to production. Assumes you already own the `clow-tau.vercel.ap
 
 ## TL;DR — one command
 
+### Full stack (backend + landing)
 ```bash
-# One-time (per machine)
-npm i -g vercel && vercel login && vercel link
+# One-time
+curl -L https://fly.io/install.sh | sh   # flyctl
+npm i -g vercel                           # vercel CLI
+fly auth login
+vercel login && vercel link
 
-# Every deploy
-./scripts/deploy_vercel.sh            # → production
-PREVIEW=1 ./scripts/deploy_vercel.sh  # → preview URL
-
-# See scripts/deploy_vercel.sh — assembles only landing/dashboard/api into
-# .vercel-deploy/, then runs `vercel --prod`. Skips SkillOpt Python, Rust
-# backend, sample bots.
+# Every deploy — Fly backend (3 services) + Vercel landing, sequenced
+export API_TOKEN=$(openssl rand -hex 32)  # shared bearer across services
+export SLACK_WEBHOOK=https://hooks.slack.com/...   # optional
+PREFIX=myco- ./scripts/deploy_fullstack.sh
 ```
 
-Then read the sections below only if you're setting up for the first time or debugging.
+`PREFIX=myco-` prepends to Fly app names (`myco-gtm-engine`, `myco-security-agent`, `myco-evo-metaclaw`) because Fly names are globally unique — the defaults are almost certainly taken. Auto-creates apps + volumes + secrets, sets `GTM_ENGINE_URL`/`_TOKEN` on Vercel to wire the landing to the backend, then runs `smoke.sh` to confirm.
+
+### Landing only (skip Fly backend)
+```bash
+SKIP_FLY=1 ./scripts/deploy_fullstack.sh    # → landing goes to Vercel; waitlist falls back to GitHub Issues (needs GH_TOKEN + GH_REPO)
+# or directly:
+./scripts/deploy_vercel.sh
+```
+
+### Backend only (skip Vercel)
+```bash
+SKIP_VERCEL=1 API_TOKEN=... ./scripts/deploy_fullstack.sh
+```
+
+Then read the sections below only if you're setting up for the first time, debugging, or picking specific pieces.
 
 ---
 
