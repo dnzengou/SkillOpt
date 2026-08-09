@@ -32,6 +32,7 @@ SkillOpt/
 ├── skillopt_webui/    # Gradio monitoring dashboard
 ├── index.html         # standalone project landing page (Microsoft/SkillOpt)
 ├── mkdocs.yml         # MkDocs config → deploys to GitHub Pages
+├── CLOW.md            # Clow manual & reference (install / deploy / use / apps / API / troubleshoot)
 ├── MARKETING.md       # Clow bots ARM GTM strategy (branch: clow-bots-marketing-gtm)
 ├── Clow_GTM_Blueprint.md  # living roadmap for Clow GTM initiative
 ├── EvoMetaClaw.md     # SkillOpt × Clow moat: self-evolving bots

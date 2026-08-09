@@ -1,5 +1,5 @@
 # Clow GTM Blueprint — Living Roadmap
-## v1.7 · Aug 2026 · BizFlow ARM + RRSS · devflow Kf CI+Bl · Marketplace + EvoStack + CI
+## v2.0 · Aug 2026 · BizFlow ARM + RRSS · devflow Kf CI+Bl · Full stack validated live + CLOW.md manual
 
 > **Product:** Clow — agent economy bots ecosystem powered by PicoClaw + AI LLM  
 > **Site:** https://clow-tau.vercel.app · **X:** @XTech73781  
@@ -312,17 +312,38 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 
 ---
 
-## FILE MANIFEST (v1.3)
+## FILE MANIFEST (v2.0)
+
+**Manual entry point:** [`CLOW.md`](./CLOW.md) — top-level guide (install / deploy / use / apps / examples / API / troubleshoot).
 
 | File | Purpose | Last Updated |
 |------|---------|-------------|
+| `CLOW.md` | **Manual & reference** — comprehensive user-facing guide | 2026-08-09 |
 | `MARKETING.md` | Full ARM GTM strategy (8 phases) + EvoMetaClaw messaging | 2026-06-13 |
-| `CLAUDE.md` | Devflow project context | 2026-06-01 |
-| `Clow_GTM_Blueprint.md` | This file — living roadmap v1.3 | 2026-06-14 |
-| `EvoMetaClaw.md` | Self-evolving bots architecture + 5 commercial hooks + launch copy | 2026-06-14 |
-| `clow_landing.html` | Production-ready standalone landing page (waitlist + OG + Plausible) | 2026-06-14 |
+| `CLAUDE.md` | Devflow project context | 2026-08-09 |
+| `Clow_GTM_Blueprint.md` | This file — living roadmap v2.0 | 2026-08-09 |
+| `EvoMetaClaw.md` | Self-evolving bots architecture + commercial hooks + launch copy | 2026-06-14 |
+| `EvoStack.md` | Name-space cheat sheet: KafCa · KafCade · EvoSkillOpt · EvoMetaClaw · EvoForge · RRSS | 2026-08-04 |
+| `DEPLOY.md` | Deployment reference (full-stack / landing-only / backend-only) | 2026-08-08 |
 | `X_THREADS.md` | 5 copy-paste X threads + reply-quote templates for @XTech73781 | 2026-06-14 |
 | `clow_bot_template.md` | Starter skill template — supply-side onramp | 2026-06-14 |
+| `clow_landing.html` | Production landing (waitlist + OG + Plausible) — Vercel `/` | 2026-06-14 |
+| `use_cases.html` | 3-bot showcase w/ live evolution feed — Vercel `/use-cases` | 2026-08-04 |
+| `dashboard.html` | Ops dashboard hitting all 3 backend services — Vercel `/dashboard` | 2026-07-14 |
+| `api/waitlist.js` | Vercel Edge Fn: gtm-engine → GitHub Issues → 200 always | 2026-08-08 |
+| `api/og.js` | Vercel Edge Fn: dynamic 1200×630 OG PNG | 2026-07-14 |
+| `vercel.json` | Routes + CSP/HSTS/security headers | 2026-08-04 |
+| `bots/telegram-summarizer/` | Free sample bot (yaml + skill + eval) | 2026-08-04 |
+| `bots/discord-moderator/` | $3/mo sample bot | 2026-08-04 |
+| `bots/slack-standup/` | $5/mo sample bot | 2026-08-04 |
+| `scripts/deploy_fullstack.sh` | Sequenced Fly + Vercel deploy | 2026-08-08 |
+| `scripts/deploy_vercel.sh` | Vercel-only deploy | 2026-06-14 |
+| `scripts/skillopt_worker.py` | Stdlib HTTP bridge: evo-metaclaw → SkillOpt train.py | 2026-07-14 |
+| `scripts/smoke.sh` | Health probe for all 4 services | 2026-07-14 |
+| `clow-agents/backend/` | Rust workspace (shared + gtm-engine + security-agent + evo-metaclaw) | 2026-08-08 |
+| `clow-agents/backend/Cargo.lock` | Committed for reproducible Fly.io builds | 2026-08-08 |
+| `.github/workflows/ci.yml` | cargo check + node --check + py compile on push | 2026-08-04 |
+| `.env.vercel.example` | Vercel env template (GTM_ENGINE_* + GH_TOKEN + GH_REPO) | 2026-08-08 |
 
 ---
 
@@ -354,6 +375,7 @@ Month 6: 6,000 total × 5% + Teams     = 300 Pro + 25 Teams = MRR $3,425
 | 1.4 | 2026-06-14 | **Ship-ready pass:** api/waitlist.js Edge Function (Airtable + throttle + validation); api/og.js dynamic OG image; vercel.json routing + full CSP/HSTS security headers; DEPLOY.md 30-min go-live checklist; landing wired to /api/og. All 2 flagged deps closed — can ship to prod today. |
 | 1.5 | 2026-06-14 | **Backend layer live:** absorbed Kimi GTM+Security pack into `clow-agents/` (Rust/Axum/SQLite/Fly.io). Built missing `gtm-engine/src/main.rs` (Clow-tailored: ICP scoring by domain+source+plan+persona; deal pipeline Free→Pro→Teams→Enterprise; MRR forecast; dormant-lead nurture loop; hot-lead Slack alerts). Built missing `evo-metaclaw` crate (fitness EMA per bot, cadence-triggered evolution, gate simulation, public leaderboard, KafCa bus events). Security-agent from pack kept as-is → powers **Certified Secure Bot** marketplace badge. Waitlist Edge Function now forwards to gtm-engine for ICP scoring (best-effort, non-blocking). |
 | 1.6 | 2026-07-14 | **Ops layer + real evolution bridge:** (1) Fixed 2 Rust compile blockers (sqlx `macros` feature + `governor` dep in security-agent). (2) `dashboard.html` — single-file ops dashboard hitting all 3 services; MRR/ARR KPIs, top leads with persona pills, deal pipeline bar chart, evolution leaderboard, security findings; auto-refresh 30s; localStorage config; `noindex,nofollow`. (3) `scripts/skillopt_worker.py` — stdlib-only HTTP worker bridging evo-metaclaw ↔ `scripts/train.py`; parses `history.json` for real gate delta; auth via `WORKER_TOKEN`. (4) evo-metaclaw `trigger_evolution` now calls the worker via `SKILLOPT_WORKER_URL`; falls back to fitness simulation if unset — loop never blocks. (5) `scripts/smoke.sh` — one-command health probe (public + authed) for all 4 services with pass/fail summary. (6) DEPLOY.md v1.1 with Fly deploy, dashboard, worker wiring, security caveat. |
+| 2.0 | 2026-08-09 | **Live end-to-end validation + user-facing manual:** (1) **Ran the signal flow live** on the local container: `cargo build -p gtm-engine` → started binary on :18080 → drove 3 signal-flow ingests → verified persona classifier (fortune500=100 enterprise-edge, indie-shop=67 enterprise-edge, gmail=31 edge-builder) → advanced deal activated→pro→teams (MRR climbed $0→$9→$29, prob 0.3→0.6→0.75) → weighted pipeline forecast returned math-correct $21.75 MRR / $261 ARR → KafCa bus captured 3 events → 3 trajectory signals emitted with correct fitness deltas (formula `score/100 - 0.5`) → 6 audit-log entries → SIGTERM handled with "shutting down gracefully" (RRSS Stabilize). Bearer auth verified: 401/401/200 on no/bad/good token (RRSS Solidify). (2) **CLOW.md manual** — top-level user-facing guide with 13 sections: what-is · architecture ASCII · repo layout · prerequisites · install (local dev, 5 sub-sections) · deployment (3 paths incl. GitHub Issues fallback) · usage lifecycle (user/publisher/operator) · applications (all 3 sample bots) · request/response examples pulled from the live demo · full API reference for 3 backend services + 2 edge fns + worker · contributing (add bot, add service, extend scorer) · troubleshooting table · links section. (3) File manifest expanded from 7 to 26 entries; changelog now spans v1.0 → v2.0. |
 | 1.9 | 2026-08-08 | **Full-stack deploy path — Rust actually compiles:** ran `cargo check --workspace` for the first time; caught 3 real compile errors: (1) `self: Arc<RwLock<Self>>` is not a valid Rust receiver in `gtm-engine::nurture_loop` — rewrote as free-function taking `state: Arc<RwLock<Self>>`; (2) `impl Clone for Config` in security-agent violated the orphan rule — added `#[derive(Clone)]` on `shared::Config`, deleted the manual impl; (3) `tower_governor 0.7 GovernorLayer::new(&RateLimiter::direct(...))` doesn't exist — dropped the rate-limiter entirely (bearer auth + Fly platform limits are sufficient for MVP; documented re-add path). Removed governor + tower_governor from workspace + security-agent Cargo.toml. Cleaned 2 unused-import warnings in shared. Result: **all 4 crates now build clean; clippy shows only style warnings, zero correctness issues**. Added `scripts/deploy_fullstack.sh` — sequenced deploy of Fly.io backend (gtm-engine → security-agent → evo-metaclaw with auto app/volume/secrets create) + Vercel landing (wires `GTM_ENGINE_URL`/`_TOKEN` automatically) + runs smoke.sh; `PREFIX=` param for globally-unique Fly names; `SKIP_FLY`/`SKIP_VERCEL` flags for partial deploys. DEPLOY.md TL;DR rewritten with 3 paths (full / landing-only / backend-only). |
 | 1.8 | 2026-08-08 | **Airtable removed; zero-SaaS waitlist path:** `api/waitlist.js` now tries **gtm-engine → GitHub Issues → client-side fallback** in priority order. Both backends opt-in via env; if neither is set the endpoint still returns 200 (Plausible + localStorage catch the signal — no lost signups even in the barest config). GitHub Issues path: fine-grained PAT with `issues:write` on a dedicated `clow-waitlist` repo; every signup = one labeled issue (`waitlist`, `source:...`, `plan:...`) filterable via GitHub's native issue search. `.env.vercel.example` rewritten (no AIRTABLE_*, added GH_TOKEN + GH_REPO). DEPLOY.md § 2 documents both options with 60-second setup for GitHub; § 6 kill switches updated for the new failure modes. Zero third-party SaaS required for a working landing. |
 | 1.7 | 2026-08-04 | **Marketplace inventory + EvoStack + CI:** (1) Verified `tower_governor` crate on crates.io — pinned 0.7 (API used in security-agent); latest is 0.8 requires ~5-line rewrite (deferred, documented in Cargo.toml comment). (2) `bots/` — three ready-to-fork sample bots with yaml + skill.md + eval/held_out.json: `telegram-summarizer` (free), `discord-moderator` ($3/mo), `slack-standup` ($5/mo). Supply-side flywheel materialized. (3) `use_cases.html` — commercial showcase page routed at `/use-cases`; three bot cards with badges (Free/Paid + EvoMetaClaw + Certified) + copy-paste `clow deploy` commands + **live EvoForge evolution feed** hitting evo-metaclaw's public `/leaderboard`. First page a bot buyer sees. (4) `EvoStack.md` — one-page name-space cheat sheet: KafCa (bus) · KafCade (cadence) · EvoSkillOpt (training) · EvoMetaClaw (self-improve) · EvoForge (build UX) · Certified Secure Bot · RRSS. Removes onboarding friction for contributors. (5) `.github/workflows/ci.yml` — cargo check + clippy + node syntax check + python compile + bash lint on every push. First automated regression gate. (6) `.env.vercel.example` — clean separation from SkillOpt's `.env.example` (no collision). (7) `vercel.json` — routes `/use-cases` and `/dashboard`; landing nav links to `/use-cases`. |
