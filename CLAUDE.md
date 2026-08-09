@@ -36,6 +36,7 @@ SkillOpt/
 ├── MARKETING.md       # Clow bots ARM GTM strategy (branch: clow-bots-marketing-gtm)
 ├── Clow_GTM_Blueprint.md  # living roadmap for Clow GTM initiative
 ├── EvoMetaClaw.md     # SkillOpt × Clow moat: self-evolving bots
+├── EvoSkillOpt.md     # private-repo brief: what evo-skillopt is, 5 use cases, roadmap
 ├── clow_landing.html  # production-ready standalone landing page (deploy to Vercel)
 ├── use_cases.html     # 3-bot showcase w/ live evolution feed (routes: /use-cases)
 ├── X_THREADS.md       # copy-paste X threads for @XTech73781
