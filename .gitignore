@@ -40,3 +40,6 @@ docs/reflact_overview.html
 docs/render_ablation_paper_tables.py
 docs/让*
 .gradio/
+
+# assembled by scripts/migrate_to_evo_skillopt.sh — not checked in
+evo-skillopt-seed/
